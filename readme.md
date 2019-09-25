@@ -1,4 +1,5 @@
-<strong style="font-size:30px;" align="center">Laragram</strong>
+
+<h1 style="font-size:30px; font-family: 'Satisfy', cursive !important;" align="center">Laragram</h1>
 
 <p align="center">
     A simple webapp inspired in Instagram web page
