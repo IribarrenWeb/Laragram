@@ -1,4 +1,4 @@
-<p align="center">Laragram</p>
+<strong style="font-size:30px;" align="center">Laragram</strong>
 
 <p align="center">
     A simple webapp inspired in Instagram web page
