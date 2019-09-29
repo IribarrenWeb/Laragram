@@ -12,7 +12,7 @@
                     </div>
                     <div class="w-75 my-auto px-4">
                         <div class="w-100">
-                            <div class="d-block w-75 mb-3">
+                            <div class="d-block w-100 mb-3">
                                 <h1 style="color:#262626; font-size: 28px;" class="text-regular d-inline-block">{{ $user->nick }}</h1>
                                 @if ($user->id == Auth::id())
 
@@ -38,9 +38,9 @@
                 </div>
                 <hr class="mb-0 mt-0">
             </div>
-
+            
             @php
-                $count = 0;
+                $count = 0; 
             @endphp
             @foreach ($images as $image)
 
@@ -49,7 +49,8 @@
                 @endif
                  <?php $count += 1;?>
                 <div class="col-md-4 p-0">
-                    <a href="{{ route('image.detail', ['id' => $image->id ]) }}"><img class="grid-img" src="{{ route('image.get',['filename' => $image->image_path]) }}" alt="imagen de {{ $image->user->nick }}"></a>
+                <a href="{{ route('image.detail', ['id' => $image->id ]) }}"><img class="grid-img" src="{{ route('image.get', ['filename' => $image->image_path]) }}" alt="imagen de {{ $image->user->nick }}"></a>
+
                 </div>
                 @if ($count%3 == 0)
                     </div>

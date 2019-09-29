@@ -8,6 +8,16 @@ class Image extends Model {
 	protected $table = 'images';
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'image_path',
+		'description',
+	];
+
+	/**
 	 * Image has many Comments.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -28,9 +28,9 @@ Route::get('/user/avatar/{filename}', 'UserController@getImage')->name('user.ava
 Route::get('/image/subir', 'ImageController@create')->name('image.create');
 Route::post('/image/save', 'ImageController@save')->name('image.save');
 Route::get('/image/get/{filename}', 'ImageController@getImage')->name('image.get');
-Route::get('/image/detail/{id}', 'ImageController@detail')->name('image.detail');
-Route::get('/image/delete/{id}', 'ImageController@delete')->name('image.delete');
-Route::get('/image/edit/{id}', 'ImageController@edit')->name('image.edit');
+Route::get('/image/detail/{image}', 'ImageController@detail')->name('image.detail');
+Route::get('/image/delete/{image}', 'ImageController@delete')->name('image.delete');
+Route::get('/image/edit/{image}', 'ImageController@edit')->name('image.edit');
 Route::post('/image/update/', 'ImageController@update')->name('image.update');
 
 // COMMENTS ROUTES
