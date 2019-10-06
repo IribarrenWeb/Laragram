@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Image;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller {
@@ -11,31 +12,35 @@ class CommentController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function create(Request $request) {
+	public function create() {
 
-		$validate = $request->validate([
+		$data = request()->validate([
 			'content' => 'required',
 			'id' => 'required',
 		]);
 
-		$user_id = \Auth::id();
-		$image_id = $request->input('id');
-		$content = $request->input('content');
-		$detail = $request->input('detail');
+		$user = \Auth::user();
+		$image_id = $data['id'];
+		$content = $data['content'];
+		$detail = request('detail');
 
 		$comment = new Comment;
 		$comment->image_id = $image_id;
-		$comment->user_id = $user_id;
+		$comment->user_id = $user->id;
 		$comment->content = $content;
-
-		$comment->save();
+		
+		$result = $comment->save();
 
 		if ($detail == 'true') {
 			// $route = 'image.detail', [];
 			return back();
 		}
 
-		return redirect()->route('home')->with(['message' => 'Comentario agregado']);
+		return response()->json([
+			'user' => $user->nick,
+			'comment' => $comment->content,
+			'status' => $result,
+		]);
 	}
 
 	public function delete($id, $image_id) {
@@ -53,6 +58,15 @@ class CommentController extends Controller {
 				]);
 		}
 
+	}
+
+	public function getOneComment(Image $image){
+		$comment = $image->comments()->first();
+
+		return response()->json([
+			'comment' => $comment->content,
+			'user'	  => $comment->user->nick,
+		]);
 	}
 
 }

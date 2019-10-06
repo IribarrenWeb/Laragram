@@ -5,7 +5,8 @@ body{
     font-size: 14px !important;
     /*font-family: 'Roboto Slab', serif;*/
     /*font-family: 'Fauna One', serif;*/
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family:'Raleway', sans-serif;
+    font-weight: 400;
 }
 
 nav{
@@ -24,7 +25,7 @@ nav > .container{
 }
 
 main{
-    padding-top: 9%;
+    padding-top: 116px;
 }
 
 /*COLORS*/
@@ -82,6 +83,19 @@ main{
     border-color: grey !important;
 }
 
+/* NAVBAR */
+#menu li{
+    list-style: none;
+    margin-right: 25px; 
+}
+#menu li:last-child{
+    margin-right: 0; 
+}
+
+#menu li img{
+    width: 24px;
+}
+
 /*LOADER*/
 .loader{
     position: absolute;
@@ -119,17 +133,19 @@ main{
     height: 45px;
     border-top-right-radius: 0 !important;
     border-top-left-radius: 0 !important;    
+    background-color: white !important;
     box-shadow: unset;
 }
 
 .comment textarea:focus{
-    border-color: #DEE2E6;;
+    border: 0px !important;
+    border-color: #DEE2E6;
     box-shadow: -4px 1px 8px #8080801f inset;
 }
 
 .comment-section{
     /*box-shadow: 0px 0px 6px grey inset;*/
-    height: 430px;
+    height: 64%;
     overflow: hidden;
     overflow-y: auto;
     box-sizing: border-box;
@@ -188,9 +204,13 @@ main{
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
     border-left: 0;
+    height: 100%;
 }
 
 .detail-image{
+    overflow: hidden;
+    height: 100%;
+    min-height: 550px;
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
@@ -216,7 +236,7 @@ main{
     margin-top: 4px;
     font-size: 25px !important;
     font-family: 'Satisfy', cursive;
-    font-weight: bolder;
+    /* font-weight: bolder; */
 }
 
 .brand-big{
@@ -227,23 +247,37 @@ main{
 .main-content{
     margin-top: 2%;
     z-index: 1;
+    height: 600px;
 }
 
 /*  ICONS STYLES  */
-.icons > svg{
-    font-size: 22px !important;
-    cursor: pointer; 
+#container-set-info{
+    display: flex;
+    flex-wrap: wrap;
 }
 
+.card-home .icons{
+    height: 50px;
+}
+.icons{
+    height: 30px;
+    flex-wrap: wrap;
+}
 
-.like{
-    color: red !important;
+.icons img{
+    width: 24px;
+    cursor: pointer;
+}
+
+.likes{
+    width: 45px;
+    height: 30px;
 }
 
 /*LIKE PAGE*/
 .grid-img{
-    width: 293px !important;
-    height: 293px !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .grid-container{
@@ -251,11 +285,51 @@ main{
     box-sizing: border-box;
 }
 
+.grid-container > div{
+    width: 33vw;
+    margin-right: 28px;
+    height: 33vw;
+    max-height: 293px;
+}
+
+.grid-container > div:last-child{
+    margin-right: 0;
+}
 
 .grid-container:last-child{
     margin-bottom: 15%;
 }
 
+.main-container{
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    margin: 0 auto 30px;
+    max-width: 935px;
+    width: 100%;
+}
+
+/* Responsive */
+@media (min-width: 736px){
+    .main-container{
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+        padding: 0 20px 0;
+        width: calc(100% - 40px);
+    }
+}
+
+@media (max-width: 735px)
+{
+    .grid-container{
+        margin-bottom: 3px;
+    }
+
+    .grid-container > div{
+        margin-right: 3px;
+    }
+}
 
 
 /*USER PERFIL*/
@@ -275,11 +349,17 @@ main{
 /*SEARCH*/
 #search{
     z-index: 10;
+    max-height: 28px;
+    min-width: 125px;
+    width: 215px;
+    font-size: 14px !important;
 }
 
 #search:focus{
     border-color:rgb(206, 212, 218) !important;
     box-shadow: none;
+    text-align: start !important;
+    background-color: #fff !important;
 }
 
 #search-result, .loader, .loader > div{
@@ -358,4 +438,26 @@ main{
 #search-result ul li span:nth-child(2){
     line-height: 15px;
     color: #999;
+}
+
+/* Modal */
+.list-group-item a{
+    text-decoration: none;
+    color: black;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.modal-content{
+    border-radius: 12px;
+    width: 400px;
 }

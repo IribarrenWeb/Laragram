@@ -66,4 +66,12 @@ class LikeController extends Controller {
 			'user' => $user,
 		]);
 	}
+
+	public function getLikes(){
+		$image_id = request('id');
+		$likes = Like::where('image_id', $image_id)->get();
+		return response()->json([
+			'likes' => count($likes),
+		]);
+	}
 }

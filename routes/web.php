@@ -36,8 +36,11 @@ Route::post('/image/update/', 'ImageController@update')->name('image.update');
 // COMMENTS ROUTES
 Route::post('/comment/save', 'CommentController@create')->name('comment.save');
 Route::get('/comment/delete/{id}/{image_id}', 'CommentController@delete')->name('comment.delete');
+Route::get('/comment/get/{image}', 'CommentController@getOneComment')->name('comment.get');
 
 // LIKES ROUTES
 Route::get('/like/{image_id}', 'LikeController@like')->name('like.make');
 Route::get('/dislike/{image_id}', 'LikeController@dislike')->name('dislike.make');
 Route::get('/likes/user', 'LikeController@show_likes')->name('likes.user');
+Route::get('/likes/get', 'LikeController@getLikes')->name('likes.get');
+
