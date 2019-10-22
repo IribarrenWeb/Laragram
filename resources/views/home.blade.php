@@ -10,14 +10,9 @@
 
             @if (count($images) >= 1)
             
-                {{-- Bucle foreach to show image cards --}}
-                @foreach ($images as $image)
+                {{-- Componente de Vue.js --}}
+                <card-component ser="{{ $images }}"></card-component>
 
-                    @include('includes.card_home', [ 'image' => $image ])
-
-                @endforeach
-                {{-- End bucle foreach --}}
-                
                 {{-- Show pagination --}}
                 <div class="d-flex justify-content-center">
                     {{ $images->links() }}
