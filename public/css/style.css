@@ -42,6 +42,9 @@ main{
     width: inherit !important;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
 
 .text-md{
     font-size: 18px !important;
@@ -138,8 +141,7 @@ main{
 }
 
 .comment textarea:focus{
-    border: 0px !important;
-    border-color: #DEE2E6;
+    border-color: #DEE2E6 !important;
     box-shadow: -4px 1px 8px #8080801f inset;
 }
 
@@ -205,6 +207,17 @@ main{
     border-bottom-left-radius: 0 !important;
     border-left: 0;
     height: 100%;
+}
+.detail-sidebar > .row > .card-header {
+    height: 11%;
+}
+
+.detail-sidebar > .row > .align-items-baseline {
+    height: 25%;
+}
+
+.detail-sidebar > .row > .align-items-baseline > .border-top {
+    height: 60% !important;
 }
 
 .detail-image{

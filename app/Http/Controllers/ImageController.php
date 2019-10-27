@@ -89,9 +89,11 @@ class ImageController extends Controller
 		return response()->file(storage_path('app/images/') . $filename);
 	}
 
-	public function detail(Image $image)
+	public function detail($image_id)
 	{
-
+		$image = Image::with('user','comments','likes')
+				->findOrFail($image_id);
+		
 		return view('image.detail', compact('image'));
 	}
 

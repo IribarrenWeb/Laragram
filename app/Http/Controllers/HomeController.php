@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Image;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller {
 	/**
@@ -20,10 +21,20 @@ class HomeController extends Controller {
 	 * @return \Illuminate\Contracts\Support\Renderable
 	 */
 	public function index() {
+		
+		return view('home');
 
-		$images = Image::orderBy('id', 'desc')->paginate(5);
+	}
 
-		return view('home', ['images' => $images]);
+	/**
+	 * Get all images with pagination
+	 * 
+	 * @return json Collection
+	 */
+	public function getImages(Request $request){
 
+		$images = Image::with('user','comments','likes')->orderBy('id', 'desc')->paginate(4);
+
+		return $images;
 	}
 }

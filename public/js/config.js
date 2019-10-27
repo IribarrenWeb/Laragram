@@ -24,57 +24,74 @@ $(document).ready(function () {
      * Functionality to get a query search and showing the results in a view
      *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
-    $('#search').keyup(function () {
-        var querySearch = $(this).val()
-
-        if (querySearch.length >= 1) {
-
-            if (querySearch != queryOld) {
-                loader('on')
-                queryOld = querySearch
-            }
-
-            $('#search-result').fadeIn(100)
-            $('.icon').removeClass('d-none').addClass('d-block')
-
-            $.ajax({
-                url: url + '/gente/' + querySearch,
-                type: 'GET',
-                success: function (response) {
-
-                    loader('off')
-
-                    if (response.status == 'ok' && response.usuarios.length >= 1) {
-
-                        var template = '';
-
-                        response.usuarios.forEach(usuario => {
-
-                            template +=
-                                `
-                                <li class="d-flex align-items-center">
-                                    <div class="d-flex">
-                                        <div>
-                                            <img class="avatar rounded-circle" src="${url + '/user/avatar/' + usuario.image}" alt="">
-                                        </div>
-                                        <div class="ml-3">
-                                            <span class="d-block"><a class="list-group-item-action" href="${url + '/user/' + usuario.nick}" title="">${usuario.nick}</a></span>
-                                            <span class="d-block">${ usuario.name + ' ' + usuario.surname}</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            `
-                        });
-                    } else {
-                        template = '<li>No se encontraron resultados..</li>'
-                    }
-                    $('#list-result').html(template).fadeIn(200).delay(1100)
-                }
-            })
-        } else {
-            $('#search-result').fadeOut(200)
-        }
+    $('#search').focusout(function(){
+        $('#search-result').fadeOut(200)
     })
+
+    $('#search').focusin(function(){
+        $('#search-result').fadeIn(200)
+        search()
+    })
+
+    /**
+     * Functionality to search user with ajax
+     *  * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * *
+     */
+    function search(){
+
+        $('#search').keyup(function () {
+            var querySearch = $(this).val()
+    
+    
+            if (querySearch.length >= 1) {
+    
+                if (querySearch != queryOld) {
+                    loader('on')
+                    queryOld = querySearch
+                }
+    
+                $('#search-result').fadeIn(100)
+                $('.icon').removeClass('d-none').addClass('d-block')
+    
+                $.ajax({
+                    url: url + '/gente/' + querySearch,
+                    type: 'GET',
+                    success: function (response) {
+    
+                        if (response.status == 'ok' && response.usuarios.length >= 1) {
+    
+                            var template = '';
+    
+                            response.usuarios.forEach(usuario => {
+    
+                                template +=
+                                    `
+                                    <li class="d-flex align-items-center">
+                                        <div class="d-flex">
+                                            <div>
+                                                <img class="avatar rounded-circle" src="${url + '/user/avatar/' + usuario.image}" alt="">
+                                            </div>
+                                            <div class="ml-3">
+                                                <span class="d-block"><a class="list-group-item-action" href="${url + '/user/' + usuario.nick}" title="">${usuario.nick}</a></span>
+                                                <span class="d-block">${ usuario.name + ' ' + usuario.surname}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                `
+                            });
+                        } else {
+                            template = '<li>No se encontraron resultados..</li>'
+                        }
+                        $('#list-result').html(template).fadeIn(200, function(){
+                            loader('off')
+                        })
+                    }
+                })
+            } else {
+                $('#search-result').fadeOut(200)
+            }
+        })
+    }
 
 
     /**
@@ -174,9 +191,9 @@ $(document).ready(function () {
             var image_id = item.data('id')
 
             if (check_like) {
-                $.get(url + '/dislike/' + image_id, function (response) {
-                    console.log('dislike ' + response)
-                });
+                // $.get(url + '/dislike/' + image_id, function (response) {
+                //     console.log('dislike ' + response)
+                // });
                 item.animate(
                     { width: '27px' },
                     'fast',
@@ -184,7 +201,7 @@ $(document).ready(function () {
 
                         item.attr('src', url + '/images/like.png')
                             .removeClass('like')
-                        checkLikes(image_id, item)
+                        
 
                     }).addClass('dislike').animate({ width: '24px' }, 'fast')
 
@@ -201,10 +218,10 @@ $(document).ready(function () {
                     }).addClass('like').animate({ width: '24px' }, 'fast')
 
                 // item.removeClass('far dislike').addClass('fas like')
-                $.get(url + '/like/' + image_id, function (response) {
-                    console.log('like ' + response)
-                    checkLikes(image_id, item)
-                });
+                // $.get(url + '/like/' + image_id, function (response) {
+                //     console.log('like ' + response)
+                //     checkLikes(image_id, item)
+                // });
             }
 
             likes()
@@ -236,23 +253,5 @@ $(document).ready(function () {
         }
     }
 
-    function checkLikes(id, selector) {
-        let template = ''
-
-        $.get("/likes/get", { id: id },
-            function (response) {
-                console.log(response)
-                if (response.likes >= 1) {
-                    template =
-                        `
-                        Le gusta a <strong>${response.likes}</strong> personas
-                    `
-                } else {
-                    template = 'Se el primero en indicar que te gusta'
-                }
-                selector.parents('.likes').siblings('div.info-likes').unbind().html(template)
-            }
-        );
-    }
 
 });

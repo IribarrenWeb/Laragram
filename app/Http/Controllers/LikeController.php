@@ -3,58 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Like;
+use App\Image;
 
 class LikeController extends Controller {
 	public function __construct() {
 		$this->middleware('auth');
 	}
 
-	public function like($image_id) {
+	public function like(Image $image) {
 
 		$user_id = \Auth::id();
+		$isset_like = $image->likes()->where('user_id', $user_id);
 
-		$isset_like = Like::where('user_id', $user_id)
-			->where('image_id', $image_id)
-			->count();
-
-		if ($isset_like == 0) {
+		if ($isset_like->count() == 0) {
 
 			$like = new Like;
 			$like->user_id = $user_id;
-			$like->image_id = (int) $image_id;
+			$like->image_id = (int) $image->id;
 			$like->save();
 
-			return response()->json([
-				'response' => true,
-			]);
 		} else {
-			return response()->json([
-				'response' => false,
-			]);
+
+			$isset_like->first()->delete();
+
 		}
+
+		$totalLikes = $image->fresh()->likes()->count();
+		
+		return response()->json([
+			'response' => true,
+			'total' => $totalLikes
+		]);
 	}
 
-	public function dislike($image_id) {
-
-		$user_id = \Auth::id();
-
-		$like = Like::where('user_id', $user_id)
-			->where('image_id', $image_id)
-			->first();
-
-		if ($like) {
-
-			$like->delete();
-
-			return response()->json([
-				'response' => true,
-			]);
-		} else {
-			return response()->json([
-				'response' => false,
-			]);
-		}
-	}
 
 	public function show_likes() {
 		$user = \Auth::user();

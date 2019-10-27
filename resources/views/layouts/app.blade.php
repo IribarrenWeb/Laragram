@@ -11,6 +11,9 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- Moment js --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js"></script>
+    {{-- My config js --}}
     <script src="{{ asset('js/config.js') }}" defer></script>
 
     <!-- Fonts -->
