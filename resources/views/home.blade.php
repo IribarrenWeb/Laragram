@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+{{-- @dump($images) --}}
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -8,24 +8,18 @@
             {{-- Alert message --}}
             @include('includes.message')
 
-            @if (count($images) >= 1)
-            
+            {{-- @if ($images) --}}
                 {{-- Componente de Vue.js --}}
-                <card-component ser="{{ $images }}"></card-component>
-
-                {{-- Show pagination --}}
-                <div class="d-flex justify-content-center">
-                    {{ $images->links() }}
-                </div>
+                <cards-component data-user="{{Auth::user()}}"></cards-component>
             
-            @else
-                <div class="card text-center">
+            {{-- @else --}}
+                {{-- <div class="card text-center">
                   <div class="card-body">
                     <h4 class="card-title">Aun no hay post para mostrar</h4>
                     <a class="card-text" href="{{ route('image.create') }}">Subir una Imagen</a>
                   </div>
-                </div>
-            @endif
+                </div> --}}
+            {{-- @endif --}}
             
         </div>
     </div>

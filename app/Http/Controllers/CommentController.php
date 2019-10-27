@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class CommentController extends Controller {
 
@@ -17,7 +18,7 @@ class CommentController extends Controller {
 		$data = request()->validate([
 			'content' => 'required',
 			'id' => 'required',
-		]);
+		]);	
 
 		$user = \Auth::user();
 		$image_id = $data['id'];
@@ -33,7 +34,7 @@ class CommentController extends Controller {
 
 		if ($detail == 'true') {
 			// $route = 'image.detail', [];
-			return back();
+			// return back();
 		}
 
 		return response()->json([
@@ -61,12 +62,22 @@ class CommentController extends Controller {
 	}
 
 	public function getOneComment(Image $image){
-		$comment = $image->comments()->first();
+		$comments = $image->comments()->with('user')->get();
 
-		return response()->json([
-			'comment' => $comment->content,
-			'user'	  => $comment->user->nick,
-		]);
+		if(!Arr::has($comments->first(),'content')){
+			$data = [
+				'status' => 200,
+				'found' => false
+			];
+		}else{
+			$data = [
+				'status' => 200,
+				'comments' => $comments,
+				'found' => true
+			];
+		}
+		
+		return response()->json($data, $data['status']);
 	}
 
 }

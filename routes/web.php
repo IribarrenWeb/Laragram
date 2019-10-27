@@ -15,6 +15,7 @@ Auth::routes();
 
 // INDEX ROUTE
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/getimages', 'HomeController@getImages')->name('home.get');
 
 // USER ROUTES
 Route::get('/config', 'UserController@config')->name('uconfig');
@@ -28,7 +29,7 @@ Route::get('/user/avatar/{filename}', 'UserController@getImage')->name('user.ava
 Route::get('/image/subir', 'ImageController@create')->name('image.create');
 Route::post('/image/save', 'ImageController@save')->name('image.save');
 Route::get('/image/get/{filename}', 'ImageController@getImage')->name('image.get');
-Route::get('/image/detail/{image}', 'ImageController@detail')->name('image.detail');
+Route::get('/image/detail/{image_id}', 'ImageController@detail')->name('image.detail');
 Route::get('/image/delete/{image}', 'ImageController@delete')->name('image.delete');
 Route::get('/image/edit/{image}', 'ImageController@edit')->name('image.edit');
 Route::post('/image/update/', 'ImageController@update')->name('image.update');
@@ -39,7 +40,7 @@ Route::get('/comment/delete/{id}/{image_id}', 'CommentController@delete')->name(
 Route::get('/comment/get/{image}', 'CommentController@getOneComment')->name('comment.get');
 
 // LIKES ROUTES
-Route::get('/like/{image_id}', 'LikeController@like')->name('like.make');
+Route::get('/like/{image}', 'LikeController@like')->name('like.make');
 Route::get('/dislike/{image_id}', 'LikeController@dislike')->name('dislike.make');
 Route::get('/likes/user', 'LikeController@show_likes')->name('likes.user');
 Route::get('/likes/get', 'LikeController@getLikes')->name('likes.get');

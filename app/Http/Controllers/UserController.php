@@ -94,6 +94,7 @@ class UserController extends Controller {
 	}
 
 	public function perfil($nick) {
+
 		$user = User::where('nick', $nick)->first();
 		$images = Image::where('user_id', $user->id)->orderBy('id', 'desc')->paginate(12);
 		$likes = 0;
