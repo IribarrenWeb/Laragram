@@ -26,17 +26,21 @@ class ImageController extends Controller
 		return view('image.create');
 	}
 
-	public function save()
+	public function save(Request $request)
 	{
 
 		// Validacion
-		$data = request()->validate([
+		$validate = \Validator::make($request->all(),[
 			'description' => 'required|max:255',
 			'image_path' => 'required|image',
 		]);
 
+		if($validate->fails()){
+			return response()->json(['status' => false, 'errors' => $validate->errors()]);
+		}
+		
 		// Creacion del nombre de la imagen
-		$image_path_name = time() . \auth::id() . "_" . date("d-m-y") . ".{$data['image_path']->extension()}";
+		$image_path_name = time() . \Auth::id() . "_" . date("d-m-y") . ".{$request->image_path->extension()}";
 
 		// Recoger datos
 		$image_path = request('image_path')->storeAs('images', $image_path_name);
@@ -75,13 +79,13 @@ class ImageController extends Controller
 
 
 		// Guardar imagen en la base de datos
-		auth()->user()->images()->create([
+		\Auth::user()->images()->create([
 			'image_path' => $image_path_name,
-			'description' => $data['description'],
+			'description' => $request->description,
 		]);
 
 		// Redireccionar al perfil de usuario
-		return redirect()->route('user.perfil', ['nick' => auth()->user()->nick]);
+		return response()->json(['status' => true, 'message' => 'Imagen subida'],201);
 	}
 
 	public function getImage($filename)

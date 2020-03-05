@@ -18,7 +18,7 @@
 
                         <div class="form-group">
                             <div class="">
-                                <input id="nick" placeholder="Nick" type="text" class="form-control{{ $errors->has('nick') ? ' is-invalid' : '' }}" name="nick" value="{{ old('nick') }}" required autofocus>
+                                <input id="nick" placeholder="Nick" type="text" value="test123" class="form-control{{ $errors->has('nick') ? ' is-invalid' : '' }}" name="nick" value="{{ old('nick') }}" required autofocus>
 
                                 @if ($errors->has('nick'))
                                     <span class="invalid-feedback" role="alert">
@@ -30,7 +30,7 @@
 
                         <div class="form-group">
                             <div class="">
-                                <input id="password" placeholder="Contraseña" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                <input id="password" placeholder="Contraseña" value="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">

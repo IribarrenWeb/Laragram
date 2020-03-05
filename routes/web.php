@@ -11,7 +11,18 @@
 |
  */
 
-Auth::routes();
+use Illuminate\Support\Facades\Auth;
+
+Auth::routes(['logout' => false, 'reset' => false, 'verify' => false]);
+
+Route::any('/logout',function(){
+    Auth::logout();
+    return redirect()->route('login');
+});
+
+Route::get('/info',function(){
+    phpinfo();
+});
 
 // INDEX ROUTE
 Route::get('/', 'HomeController@index')->name('home');
@@ -23,7 +34,9 @@ Route::post('/user/update', 'UserController@update')->name('update');
 Route::get('/user/{nick}', 'UserController@perfil')->name('user.perfil');
 Route::get('/gente', 'UserController@index')->name('user.index');
 Route::get('/gente/{query}', 'UserController@search')->name('user.search');
+Route::get('/user/avatar/{user}/{filename}', 'UserController@getImage')->name('user.avatar');
 Route::get('/user/avatar/{filename}', 'UserController@getImage')->name('user.avatar');
+Route::get('/getauth', 'UserController@getAuth')->middleware('ajax')->name('user.auth');
 
 // IMAGE ROUTES
 Route::get('/image/subir', 'ImageController@create')->name('image.create');

@@ -30,7 +30,7 @@
                         <div class="ml-3 mr-2 my-auto">
                             <strong class="font-weight-bold">
                                 <a class="text-decoration-none text-md" 
-                                    href="" 
+                                    :href="'/user/' + image.user.nick" 
                                     title="">
                                     {{ image.user.nick }}
                                 </a>
@@ -78,8 +78,8 @@
                         <!-- Avatar image -->
                         <div class="mr-3">
                             <img class="avatar rounded-circle" 
-                                :src="userImage(image.user.image)" 
-                                :alt="image.user.name">
+                                :src="userImage(comment.user.image)" 
+                                :alt="comment.user.name">
                         </div>
 
                         <!-- Comment content -->

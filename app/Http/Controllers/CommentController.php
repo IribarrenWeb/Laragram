@@ -5,22 +5,22 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 
 class CommentController extends Controller {
 
 	public function __construct() {
-		$this->middleware('auth');
+		// $this->middleware('auth');
 	}
 
 	public function create() {
-
 		$data = request()->validate([
 			'content' => 'required',
 			'id' => 'required',
 		]);	
 
-		$user = \Auth::user();
+		$user = Auth::user();
 		$image_id = $data['id'];
 		$content = $data['content'];
 		$detail = request('detail');
@@ -32,14 +32,11 @@ class CommentController extends Controller {
 		
 		$result = $comment->save();
 
-		if ($detail == 'true') {
-			// $route = 'image.detail', [];
-			// return back();
-		}
+		$comment = $comment->fresh()->load('user');
 
 		return response()->json([
 			'user' => $user->nick,
-			'comment' => $comment->content,
+			'comment' => $comment,
 			'status' => $result,
 		]);
 	}
@@ -48,7 +45,7 @@ class CommentController extends Controller {
 
 		$comment = Comment::find($id);
 
-		if ($comment && \Auth::check() && ($comment->user->id == \Auth::id() || $comment->image->user_id == \Auth::id())) {
+		if ($comment && Auth::check() && ($comment->user->id == Auth::id() || $comment->image->user_id == Auth::id())) {
 			$comment->delete();
 			return back()->with(['message' => 'Comentario eliminado con exito.']);
 		} else {

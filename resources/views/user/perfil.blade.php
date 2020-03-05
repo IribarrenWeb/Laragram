@@ -6,7 +6,7 @@
     <header class="jumbotron pt-0 mb-0 bg-transparent jumbotron-fluid">
         <div class="container d-flex">
             <div class="w-25">
-                <img class="avatar avatar-med rounded-circle border-0 mb-4  mx-auto d-block" src="{{ route('user.avatar', ['filename' => $user->image]) }}" alt="">
+                <img class="avatar avatar-big rounded-circle border-0 mb-4  mx-auto d-block" src="{{ route('user.avatar', ['filename' => $user->image]) }}" alt="">
             </div>
             <div class="w-75 my-auto px-4">
                 <div class="w-100">

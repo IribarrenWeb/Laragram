@@ -42,10 +42,9 @@
             },
 
             changeLike(){
+                this.isLike = !this.isLike
                 axios.get(`/like/${this.image.id}`)
                     .then(res => {
-                        this.isLike = !this.isLike
-                        console.log(res.data.total);
                         this.totalLikes = res.data.total
                     })
             }

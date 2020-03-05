@@ -41,53 +41,80 @@ class UserController extends Controller {
 		$user = Auth::user();
 		$id = $user->id;
 
-		// Validar los datos recibidos
-		$validate = $request->validate([
-
-			'name' => 'required|string|max:100',
-			'surname' => 'required|string|max:100',
-			'nick' => ['required', 'string', 'max:100', Rule::unique('users')->ignore($id)],
-			'email' => ['required', 'string', 'max:100', Rule::unique('users')->ignore($id)],
-
-		]);
-
-		// Guardar los datos en variables
-		$name = $request->input('name');
-		$surname = $request->input('surname');
-		$nick = $request->input('nick');
-		$email = $request->input('email');
-
-		// Recibir la imagen
-		$image_path = $request->file('image_path');
-		if ($image_path) {
-
-			// Asignarle un nombre unico a la imagen
-			$image_name = time() . $image_path->getClientOriginalName();
-
-			// Almacenar en la carpeta 'users' del 'storage' con el nombre especificado
-			Storage::disk('users')->put($image_name, File::get($image_path));
-			$user->image = $image_name;
-
+		if(!empty($request->password)){
+			$rulesValidation = [
+				'password' => 'required|max:10',
+				'repassword' => 'required|max:10|same:repassword2',
+				'repassword2' => 'required|max:10',
+			];
+		}elseif(!empty($request->file('image'))){
+			$rulesValidation = [
+				'image' => 'required|image'
+			];
+		}else{
+			$rulesValidation = [
+				'name' => 'required|alpha|max:10',
+				'surname' => 'required|alpha|max:10',
+				'nick' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($id)],
+				'email' => ['required', 'email', 'max:50', Rule::unique('users')->ignore($id)],
+			];
 		}
 
-		// Asignar valores al usuario
-		$user->name = $name;
-		$user->surname = $surname;
-		$user->nick = $nick;
-		$user->email = $email;
+		// Validar los datos recibidos
+		$validate = \Validator::make($request->all(),$rulesValidation);
+
+		if($validate->fails()){
+
+			return response()->json([
+				'status' => false,
+				'errors' => $validate->errors()
+			],200);
+		
+		}elseif($request->password){
+
+			$isValid = Auth::once(['id' => $user->id, 'password' => $request->password]);
+
+			if($isValid){
+				$upData = \Hash::make($request->only('password'));
+			}
+		
+		}elseif($request->file('image')){
+			
+			$path = $request->file('image')->store($request->user()->id,'users');
+
+			if($user->image !== 'default_avatar.png'){
+				$exist = Storage::disk('users')->exists($user->image);
+				if($exist){
+					Storage::disk('users')->delete($user->image);
+				}
+			}
+			// Almacenar en la carpeta 'users' del 'storage' con el nombre especificado
+			$upData = ['image' => $path];
+		
+		}else{
+			
+			$upData = $request->only('name','surname','nick','email');
+		
+		}
 
 		// Guardar cambios
-		$user->update();
+		$result = $user->update($upData);
 
 		// Redireccionar a 'config' con un alerta
-		return redirect()->route('uconfig')->with(['message' => 'Usuario actualizado correctamente']);
+		return response()->json(['status'=>$result],200);
 
 	}
 
-	public function getImage($nameimage) {
+	public function getImage(Request $request) {
+		if (!empty($request->user)) {
+			$path = $request->user.'/'.$request->filename;
+		}
+		else{
+			$path = $request->filename;
+		}
 
 		// Obtener imagen del 'storage'
-		$file = Storage::disk('users')->get($nameimage);
+		$file = Storage::disk('users')->get($path);
 
 		// Enviar la imagen a la vista
 		return new Response($file, 200);
@@ -117,14 +144,18 @@ class UserController extends Controller {
 
 	public function search($query) {
 
-		// $fullname = DB::row("CONCAT(name,' ',surname) as fullname");
-
-		$users = User::where('nick', 'LIKE', '%' . $query . '%')->orderBy('id', 'desc')->get();
-
+		$users = User::where([
+			['nick', 'LIKE', '%' . $query . '%'],
+			['id','!=',\Auth::id()]
+		])->orderBy('id', 'desc')->get();
+		
 		return response()->json([
-			'usuarios' => $users,
-			'status' => 'ok',
+			'users' => $users
 		]);
 
+	}
+
+	public function getAuth(){
+		return \Auth::user();
 	}
 }

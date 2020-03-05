@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="d-flex justify-content-center">
     <!-- Init card section  -->
-    <div class="card card-home mb-5">
+    <div :style="widthImg" class="card card-home mb-5">
 
       <!-- Card header  -->
       <div class="card-header bg-white d-flex">
@@ -13,20 +13,22 @@
             alt
           />
         </div>
-        <div class="ml-3 mr-2 my-auto">
+        <!-- <div class="ml-3 mr-2 my-auto">
           <strong class="text-capitalize">
-            <a class="text-muted" href title>{{ imageData.user.name + imageData.user.surname }}</a>
+            <a class="text-muted" href= title>{{ imageData.user.name + imageData.user.surname }}</a>
           </strong>
-        </div>
-        <span class="border-left pl-2 my-auto">{{ imageData.user.nick }}</span>
+        </div> -->
+        <span class="ml-3 my-auto user-link"><a :href="`/user/${imageData.user.nick}`">{{ imageData.user.nick }}</a></span>
       </div>
       <!-- END Card header  -->
 
       <!-- Card body -->
       <div class="card-body p-0">
         <div class="w-100 d-flex">
-          <a class="d-block m-auto" :href="imageDetail" title>
-            <img :src="imagePath" alt />
+          <a class="d-block m-sm-auto m-0" :href="imageDetail" title>
+            <img 
+            :style="widthImg"
+            :src="imagePath" alt />
           </a>
         </div>
       </div>
@@ -47,29 +49,27 @@
           <strong class="d-inline-block">{{ imageData.user.nick }} -</strong>
           <p class="mb-0 d-inline-block">{{ imageData.description }}</p>
 
-          <div v-if="comments.length >= 2 || comments.length != 0">
+          <div v-if="imageData.comments.length >= 1">
             <p class="mb-0 mt-2 comment">
               <a
                 class="text-muted"
                 :href="imageDetail"
                 title
-              >Ver los {{ totalComments }} comentarios.</a>
+              >Ver los {{ imageData.comments.length }} comentarios.</a>
             </p>
 
             <div
               class="d-block comment_show mt-1"
-              v-for="(comment, index) in comments"
-              :key="index"
             >
               <p class="mb-0 d-inline-block">
                 <img
                   class="mr-2 avatar rounded-circle"
-                  :src="userImage(comment.user.image)"
+                  :src="userImage(comments.user.image)"
                   height="500px"
                   alt
                 />
-                <strong class="d-inline-block mr-1">{{comment.user.nick}}</strong>
-                {{ comment.content }}
+                <strong class="d-inline-block mr-1">{{comments.user.nick}}</strong>
+                {{ comments.content }}
               </p>
             </div>
           </div>
@@ -114,36 +114,18 @@
   import LikeComponent from './LikeComponent'
 
   export default {
-    props: ["imageData", "userData"],
+    props: ["imageData", "userData", "imageWidth"],
     components: {
       LikeComponent
     },
     data() {
       return {
         user: "",
-        comments: [],
-        totalComments: 0,
-        text: ""
+        text: "",
+        imageComments: this.imageData.comments
       };
     },
     methods: {
-
-      async getComments() {
-
-        let comments = [];
-
-        let res = await axios.get(`/comment/get/${this.imageData.id}`)
-        
-        if (res.data.found) {
-          for (let i = 0; i < 2; i++) {
-            // console.log(res);
-            comments[i] = res.data.comments[i];
-          }
-          this.comments = comments
-        }
-  
-      },
-
       async sendComment(e) {
         e.preventDefault();
         
@@ -153,7 +135,7 @@
         };
 
         await axios.post(`/comment/save`, params).then(res => {
-          this.getComments();
+          this.imageComments.push(res.data.comment)
           this.text = "";
           this.totalComments += 1;
         });
@@ -169,13 +151,34 @@
       },
       imagePath() {
         return `/image/get/${this.imageData.image_path}`;
-      }
+      },
+      widthImg(){
+        if(this.imageWidth != false){
+          return {'max-width': this.imageWidth.maxWidth}
+        }
+        return
+      },
+      comments(){
+        if(this.imageComments.length == 0){
+          return
+        }
+        let comments = _.orderBy(this.imageComments,'created_at','desc')
+        return _.head(comments);
+      },
+
     },
 
     created() {
-      this.getComments();
-
-      this.totalComments = this.imageData.comments.length;
+      this.totalComments = this.imageComments.length;
     }
   };
 </script>
+
+<style lang="scss">
+  .card-header {
+    .user-link a{
+      text-decoration: none;
+      color: black;
+    }
+  }
+</style>

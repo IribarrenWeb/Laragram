@@ -24,7 +24,7 @@ class Image extends Model {
 	 */
 	public function comments() {
 		// hasMany(RelatedModel, foreignKeyOnRelatedModel = image_id, localKey = id)
-		return $this->hasMany('App\Comment')->orderBy('id', 'desc');
+		return $this->hasMany('App\Comment')->with('user')->orderBy('id', 'desc');
 	}
 
 	/**
